@@ -47,6 +47,7 @@ RUN apt-get update \
        lsb-release \
        software-properties-common \ 
        file \
+       libmpfr6 \
     && apt-get autoremove -y --purge \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/*

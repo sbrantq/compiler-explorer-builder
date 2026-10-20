@@ -1,6 +1,6 @@
 # Default settings for C++
-compilers=&clang-enzyme-main:&reclang-enzyme-main
-tools=clangquerydefault:strings:ldd
+compilers=&clang-enzyme-main:&reclang-enzyme-main:&clang-poseidon
+tools=clangquerydefault:strings:ldd:poseidon-report:poseidon-source:poseidon-diff:poseidon-fpcore
 
 tools.clangquerydefault.exe=/usr/bin/clang-query
 tools.clangquerydefault.name=clang-query (default)
@@ -21,6 +21,39 @@ tools.strings.type=postcompilation
 tools.strings.class=strings-tool
 tools.strings.exclude=djggp
 tools.strings.stdinHint=disabled
+
+tools.poseidon-report.name=Poseidon report
+tools.poseidon-report.exe=/opt/compiler-explorer/poseidon/poseidon-explain-ce.sh
+tools.poseidon-report.type=postcompilation
+tools.poseidon-report.class=testing-tool
+tools.poseidon-report.options=report
+tools.poseidon-report.includeKey=poseidon
+tools.poseidon-report.stdinHint=disabled
+
+tools.poseidon-source.name=Poseidon source
+tools.poseidon-source.exe=/opt/compiler-explorer/poseidon/poseidon-explain-ce.sh
+tools.poseidon-source.type=postcompilation
+tools.poseidon-source.class=miri-tool
+tools.poseidon-source.options=source
+tools.poseidon-source.includeKey=poseidon
+tools.poseidon-source.stdinHint=disabled
+tools.poseidon-source.languageId=cppp
+
+tools.poseidon-diff.name=Poseidon diff
+tools.poseidon-diff.exe=/opt/compiler-explorer/poseidon/poseidon-explain-ce.sh
+tools.poseidon-diff.type=postcompilation
+tools.poseidon-diff.class=miri-tool
+tools.poseidon-diff.options=diff
+tools.poseidon-diff.includeKey=poseidon
+tools.poseidon-diff.stdinHint=disabled
+
+tools.poseidon-fpcore.name=Poseidon FPCore
+tools.poseidon-fpcore.exe=/opt/compiler-explorer/poseidon/poseidon-explain-ce.sh
+tools.poseidon-fpcore.type=postcompilation
+tools.poseidon-fpcore.class=miri-tool
+tools.poseidon-fpcore.options=fpcore
+tools.poseidon-fpcore.includeKey=poseidon
+tools.poseidon-fpcore.stdinHint=disabled
 
 defaultCompiler=clang${{ compilers[0].version }}-enzyme-main
 postProcess=
@@ -67,3 +100,18 @@ group.reclang-enzyme-main.options=-fno-discard-value-names
 compiler.reclang.exe=/opt/compiler-explorer/main/reactant-clang
 compiler.reclang.options=-resource-dir=/usr/lib/llvm-21/lib/clang/21 -I/opt/compiler-explorer/libraries/include -L/opt/compiler-explorer/lib
 compiler.reclang.name=Reactant Clang ({{ reactant_commit }})
+
+# Poseidon, from the poseidon branch of EnzymeAD/Enzyme, installed by
+# update-versions.py. Its tools show only for compilers with poseidon=true.
+group.clang-poseidon.compilers=clang21-poseidon
+group.clang-poseidon.intelAsm=-mllvm --x86-asm-syntax=intel
+group.clang-poseidon.compilerType=clang
+group.clang-poseidon.supportsExecute=true
+group.clang-poseidon.isSemVer=true
+group.clang-poseidon.groupName=CLANG + POSEIDON (poseidon)
+group.clang-poseidon.options=-O2 -fno-discard-value-names -Rpass=poseidon -Rpass-analysis=poseidon
+group.clang-poseidon.poseidon=true
+
+compiler.clang21-poseidon.exe=/opt/compiler-explorer/poseidon/clang++
+compiler.clang21-poseidon.semver=21
+compiler.clang21-poseidon.name=clang 21 + Poseidon ({{ poseidon_commit }})

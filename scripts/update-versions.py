@@ -7,6 +7,7 @@ from pathlib import Path
 from jinja2 import Environment, FileSystemLoader, ChoiceLoader
 
 import sys
+import tarfile
 import urllib.request
 
 
@@ -40,6 +41,48 @@ if len(sys.argv) > 6:
     if reactant_commit == "None":
         reactant_commit = None
 
+poseidon_commit = None
+if len(sys.argv) > 7:
+    poseidon_commit = sys.argv[7]
+    if poseidon_commit == "None":
+        poseidon_commit = None
+
+POSEIDON_DIR = Path("/opt/compiler-explorer/poseidon")
+POSEIDON_MODEL = Path("/opt/compiler-explorer/poseidon-cost-model/cm_x86-64_explorer.csv")
+
+def install_poseidon(commit):
+    """Unpack the nightly-poseidon build beside the live tree and swap it in.
+    The cost model lives outside the tree, measured once on this machine, and
+    the tree links to it."""
+    url = "https://github.com/EnzymeAD/Enzyme/releases/download/nightly-poseidon/poseidon-explorer-llvm21.tar.gz"
+    tmp_path = Path("/tmp/poseidon-explorer.tar.gz")
+    new_dir = POSEIDON_DIR.with_name("poseidon.new")
+    old_dir = POSEIDON_DIR.with_name("poseidon.old")
+    print(f"Downloading {url} to {tmp_path}")
+    try:
+        urllib.request.urlretrieve(url, tmp_path)
+        shutil.rmtree(new_dir, ignore_errors=True)
+        new_dir.mkdir(parents=True)
+        with tarfile.open(tmp_path) as tar:
+            for member in tar.getmembers():
+                parts = Path(member.name).parts[1:]
+                if not parts:
+                    continue
+                member.name = str(Path(*parts))
+                tar.extract(member, new_dir, filter="tar")
+        (new_dir / ".commit").write_text(commit + "\n")
+        model = new_dir / "cost_models" / POSEIDON_MODEL.name
+        model.parent.mkdir(exist_ok=True)
+        model.unlink(missing_ok=True)
+        model.symlink_to(POSEIDON_MODEL)
+        shutil.rmtree(old_dir, ignore_errors=True)
+        if POSEIDON_DIR.exists():
+            POSEIDON_DIR.rename(old_dir)
+        new_dir.rename(POSEIDON_DIR)
+        shutil.rmtree(old_dir, ignore_errors=True)
+    except Exception as e:
+        print(f"Error installing Poseidon {commit}: {e}")
+
 def get_compiler_info(raw_name, trunk_val):
     """Extracts version and semver from strings like 'clang-15.0.0' or 'clang-assertions-trunk'."""
     # Matches digits or 'trunk'
@@ -55,11 +98,20 @@ def get_compiler_info(raw_name, trunk_val):
     
     return int(major_version), semver
 
+def installed_poseidon():
+    try:
+        return (POSEIDON_DIR / ".commit").read_text().strip()[:7]
+    except OSError:
+        return "<unknown>"
+
 def main():
     # Read input files
     trunk_val = TRUNK_VERSION_FILE.read_text().strip()
     compilers_raw = [c.strip() for c in CLANG_VERSIONS_FILE.read_text().splitlines() if c.strip()]
     julia_versions = [c.strip() for c in JULIA_VERSIONS_FILE.read_text().splitlines() if c.strip()]
+
+    if poseidon_commit is not None:
+        install_poseidon(poseidon_commit)
 
     # 3. Generate context for templates
     env = Environment(loader=ChoiceLoader([
@@ -138,14 +190,15 @@ def main():
         "julia_versions": julia_versions,
         "trunk_val": trunk_val,
         "enzymejax_commit": ejaxcommit if ejaxcommit is not None else "<unknown>",
-        "reactant_commit": reactant_commit if reactant_commit is not None else "<unknown>"
+        "reactant_commit": reactant_commit if reactant_commit is not None else "<unknown>",
+        "poseidon_commit": installed_poseidon(),
     }
 
 
     # Map of internal group keys to their respective property files
     FILES_MAP = []
 
-    if commit is not None or reactant_commit is not None or len(sys.argv) == 4:
+    if commit is not None or reactant_commit is not None or poseidon_commit is not None or len(sys.argv) == 4:
         FILES_MAP.append(("cuda", "cuda.enzyme.properties"))
         FILES_MAP.append(("cpp",  "c++.enzyme.properties"))
         FILES_MAP.append(("c",    "c.enzyme.properties"))

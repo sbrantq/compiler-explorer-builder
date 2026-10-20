@@ -14,6 +14,8 @@ RUN git clone -b main https://github.com/EnzymeAD/Reactant.git /app/Reactant
 
 RUN ccache -M 20G
 
+RUN python3 -m venv /app/poseidon-venv && /app/poseidon-venv/bin/pip install --no-cache-dir llvmlite numpy
+
 COPY scripts /app/scripts
 COPY data /app/data
 COPY template_files /app/template_files
