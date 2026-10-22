@@ -1,3 +1,5 @@
+// https://prontolab.github.io/numerics/try/#ex=per-call
+
 // __poseidon_optimize makes one call the site: each call has its own profile,
 // target and rewritten copy. The two calls below see different ranges of x and
 // get different rewrites; the plain call runs the function as written.

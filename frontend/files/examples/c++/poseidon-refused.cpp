@@ -1,3 +1,5 @@
+// https://prontolab.github.io/numerics/try/#ex=refused
+
 // The same wave packet with a 1e-10 accuracy target on the function: single
 // precision is refused.
 #include "poseidon/poseidon.h"

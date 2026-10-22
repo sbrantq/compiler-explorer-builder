@@ -1,3 +1,5 @@
+// https://prontolab.github.io/numerics/try/#ex=lulesh
+
 // LULESH's EOS compression 1/v - 1 cancels for a relative volume v near 1.
 #include "poseidon/poseidon.h"
 #include <cmath>

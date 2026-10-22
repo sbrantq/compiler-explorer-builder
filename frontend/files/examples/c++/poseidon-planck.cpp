@@ -1,3 +1,5 @@
+// https://prontolab.github.io/numerics/try/#ex=planck
+
 // Planck's x / (e^x - 1) cancels at low frequency, where x = h nu / kT is
 // small.
 #include "poseidon/poseidon.h"

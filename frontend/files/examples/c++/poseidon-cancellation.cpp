@@ -1,3 +1,5 @@
+// https://prontolab.github.io/numerics/try/#ex=cancellation
+
 // Poseidon profiles every call of a function marked POSEIDON_OPTIMIZE, then
 // rewrites it to the cheapest form whose modelled error meets -poseidon-tau. In
 // the assembly, kernel is the rewritten function and as_written the same loop

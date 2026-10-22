@@ -1,3 +1,5 @@
+// https://prontolab.github.io/numerics/try/#ex=precision
+
 // A Gaussian wave packet: at the default -poseidon-tau=1e-6 single precision is
 // accurate enough.
 #include "poseidon/poseidon.h"

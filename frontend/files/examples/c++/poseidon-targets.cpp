@@ -1,3 +1,5 @@
+// https://prontolab.github.io/numerics/try/#ex=targets
+
 // Each function carries its own accuracy target with POSEIDON_OPTIMIZE_TAU. The
 // same wave packet is computed for a plot, where 1e-4 is plenty and single
 // precision is chosen, and for a checksum, where 1e-14 keeps it as written.

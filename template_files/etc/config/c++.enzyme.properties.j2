@@ -1,5 +1,5 @@
 # Default settings for C++
-compilers=&clang-enzyme-main:&reclang-enzyme-main:&clang-poseidon
+compilers=&clang-enzyme-main:&reclang-enzyme-main:&clang-enzyme-poseidon
 tools=clangquerydefault:strings:ldd:poseidon-report:poseidon-source:poseidon-diff:poseidon-fpcore
 
 tools.clangquerydefault.exe=/usr/bin/clang-query
@@ -103,15 +103,15 @@ compiler.reclang.name=Reactant Clang ({{ reactant_commit }})
 
 # Poseidon, from the poseidon branch of EnzymeAD/Enzyme, installed by
 # update-versions.py. Its tools show only for compilers with poseidon=true.
-group.clang-poseidon.compilers=clang21-poseidon
-group.clang-poseidon.intelAsm=-mllvm --x86-asm-syntax=intel
-group.clang-poseidon.compilerType=clang
-group.clang-poseidon.supportsExecute=true
-group.clang-poseidon.isSemVer=true
-group.clang-poseidon.groupName=CLANG + POSEIDON (poseidon)
-group.clang-poseidon.options=-O2 -fno-discard-value-names -Rpass=poseidon -Rpass-analysis=poseidon
-group.clang-poseidon.poseidon=true
+group.clang-enzyme-poseidon.compilers=clang21-poseidon
+group.clang-enzyme-poseidon.intelAsm=-mllvm --x86-asm-syntax=intel
+group.clang-enzyme-poseidon.compilerType=clang
+group.clang-enzyme-poseidon.supportsExecute=true
+group.clang-enzyme-poseidon.isSemVer=true
+group.clang-enzyme-poseidon.groupName=CLANG + POSEIDON (poseidon)
+group.clang-enzyme-poseidon.poseidon=true
 
 compiler.clang21-poseidon.exe=/opt/compiler-explorer/poseidon/clang++
+compiler.clang21-poseidon.options=-O2 -fno-discard-value-names -Rpass=poseidon -Rpass-analysis=poseidon -I/opt/compiler-explorer/libraries/include -L/opt/compiler-explorer/lib
 compiler.clang21-poseidon.semver=21
 compiler.clang21-poseidon.name=clang 21 + Poseidon ({{ poseidon_commit }})

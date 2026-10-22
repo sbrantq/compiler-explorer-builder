@@ -70,6 +70,7 @@ def install_poseidon(commit):
                     continue
                 member.name = str(Path(*parts))
                 tar.extract(member, new_dir, filter="tar")
+        tmp_path.unlink()
         (new_dir / ".commit").write_text(commit + "\n")
         model = new_dir / "cost_models" / POSEIDON_MODEL.name
         model.parent.mkdir(exist_ok=True)

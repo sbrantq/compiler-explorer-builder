@@ -1,3 +1,5 @@
+// https://prontolab.github.io/numerics/try/#ex=quadratic
+
 // The root (-b + sqrt(b^2 - 4)) / 2 of x^2 + b x + 1 cancels for large positive
 // b. Herbie answers with a regime split, one series per sign of b that meets
 // the 1e-6 target on the profiled range |b| >= 1e3: a branch in the assembly,

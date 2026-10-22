@@ -1,3 +1,5 @@
+// https://prontolab.github.io/numerics/try/#ex=quaternion
+
 // One step of attitude integration: four quaternion components solved as one FP
 // subgraph.
 #include "poseidon/poseidon.h"

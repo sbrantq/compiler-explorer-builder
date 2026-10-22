@@ -69,6 +69,8 @@ for branch in ${branches[@]}; do
    then
       echo -e ${FINISHED}Updating Poseidon, old was $PHEADHASH new was $PUPSTREAMHASH ${NOCOLOR}
       poseidoncommit=$PUPSTREAMHASH
+   else
+      echo -e ${FINISHED}Poseidon is up to date with nightly-poseidon.${NOCOLOR}
    fi
 
    if [ "$JHEADHASH" != "$JUPSTREAMHASH" ] || [ "$RHEADHASH" != "$RUPSTREAMHASH" ]  || [ "$HEADHASH" != "$UPSTREAMHASH" ] || [ "$poseidoncommit" != "None" ]
